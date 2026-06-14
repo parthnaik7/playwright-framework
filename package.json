@@ -1,0 +1,72 @@
+{
+  "name": "playwright-automation-framework",
+  "version": "1.0.0",
+  "description": "Production-ready Playwright TypeScript automation framework with POM, utilities, and Allure reporting",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:dev": "cross-env APP_ENV=dev playwright test",
+    "test:qa": "cross-env APP_ENV=qa playwright test",
+    "test:prod": "cross-env APP_ENV=prod playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:login": "playwright test tests/saucedemo/login.spec.ts",
+    "test:cart": "playwright test tests/saucedemo/cart.spec.ts",
+    "test:checkout": "playwright test tests/saucedemo/checkout.spec.ts",
+    "test:api": "playwright test tests/api/",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "report:playwright": "playwright show-report",
+    "report:allure:generate": "allure generate allure-results --clean -o allure-report",
+    "report:allure:open": "allure open allure-report",
+    "report:allure:serve": "allure serve allure-results",
+    "report:allure": "npm run report:allure:generate && npm run report:allure:open",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,json,md}\"",
+    "clean": "rimraf test-results allure-results allure-report playwright-report dist",
+    "codegen": "playwright codegen",
+    "install:browsers": "playwright install",
+    "install:browsers:deps": "playwright install --with-deps"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "@types/node": "^20.14.0",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "allure-playwright": "^3.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "dotenv": "^16.4.5",
+    "uuid": "^9.0.1",
+    "winston": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "automation",
+    "testing",
+    "pom",
+    "allure",
+    "e2e"
+  ],
+  "author": "QA Team",
+  "license": "MIT"
+}

@@ -1,0 +1,168 @@
+# .github/workflows/playwright.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Playwright CI Pipeline
+# Runs on every push to main/develop and on every PR targeting those branches.
+# Uploads both Playwright HTML and Allure reports as artifacts.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: 🎭 Playwright Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'qa'
+        type: choice
+        options: [dev, qa, prod]
+      browser:
+        description: 'Browser to run tests on'
+        required: false
+        default: 'chromium'
+        type: choice
+        options: [chromium, firefox, webkit]
+
+env:
+  NODE_VERSION: '20'
+  APP_ENV: ${{ github.event.inputs.environment || 'qa' }}
+
+jobs:
+  # ── Lint & type-check ──────────────────────────────────────────────────────
+  lint:
+    name: 🔍 Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check Prettier formatting
+        run: npm run format:check
+
+  # ── Playwright tests ────────────────────────────────────────────────────────
+  test:
+    name: 🧪 Tests (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Create env file
+        run: |
+          cat > .env.${{ env.APP_ENV }} << EOF
+          APP_ENV=${{ env.APP_ENV }}
+          BASE_URL=${{ secrets.BASE_URL || 'https://www.saucedemo.com' }}
+          API_BASE_URL=${{ secrets.API_BASE_URL || 'https://api.example.com' }}
+          STANDARD_USER=${{ secrets.STANDARD_USER || 'standard_user' }}
+          STANDARD_PASSWORD=${{ secrets.STANDARD_PASSWORD || 'secret_sauce' }}
+          LOCKED_USER=locked_out_user
+          LOCKED_PASSWORD=secret_sauce
+          PROBLEM_USER=problem_user
+          PROBLEM_PASSWORD=secret_sauce
+          PERF_GLITCH_USER=performance_glitch_user
+          PERF_GLITCH_PASSWORD=secret_sauce
+          DEFAULT_TIMEOUT=30000
+          NAVIGATION_TIMEOUT=60000
+          EXPECT_TIMEOUT=10000
+          HEADLESS=true
+          BROWSER=${{ matrix.project }}
+          RETRIES=2
+          WORKERS=2
+          LOG_LEVEL=info
+          ENABLE_VIDEO=true
+          ENABLE_SCREENSHOTS=true
+          ENABLE_TRACES=true
+          EOF
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          APP_ENV: ${{ env.APP_ENV }}
+          CI: true
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-${{ matrix.project }}
+          path: allure-results/
+          retention-days: 14
+
+      - name: Upload test artifacts (screenshots, videos, traces)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-artifacts-${{ matrix.project }}
+          path: test-results/
+          retention-days: 7
+
+  # ── Allure report ────────────────────────────────────────────────────────────
+  allure-report:
+    name: 📊 Generate Allure Report
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          merge-multiple: true
+          path: allure-results/
+
+      - name: Generate Allure report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          gh_pages: gh-pages
+          allure_history: allure-history
+
+      - name: Upload Allure HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: allure-report/
+          retention-days: 30
