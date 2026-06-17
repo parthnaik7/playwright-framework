@@ -12,7 +12,7 @@
  * Playwright executes this file via `globalSetup` in playwright.config.ts.
  */
 
-import { chromium } from '@playwright/test';
+import { chromium, firefox, webkit } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 import { EnvironmentManager } from './src/helpers/EnvironmentManager';
@@ -64,7 +64,15 @@ async function globalSetup(): Promise<void> {
 
   log.info('Seeding authentication storage state...');
 
-  const browser = await chromium.launch({ headless: config.browser.headless });
+  const browserType = config.browser.browser;
+  let browser;
+  if (browserType === 'firefox') {
+    browser = await firefox.launch({ headless: config.browser.headless });
+  } else if (browserType === 'webkit') {
+    browser = await webkit.launch({ headless: config.browser.headless });
+  } else {
+    browser = await chromium.launch({ headless: config.browser.headless });
+  }
 
   try {
     await AuthService.loginAndSaveState(browser, {
