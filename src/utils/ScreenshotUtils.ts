@@ -32,11 +32,7 @@ export class ScreenshotUtils {
    * Captures a full-page screenshot and saves it to the screenshot directory.
    * Returns the absolute path so the caller can attach it to a report.
    */
-  public static async capturePage(
-    page: Page,
-    name: string,
-    fullPage = true,
-  ): Promise<string> {
+  public static async capturePage(page: Page, name: string, fullPage = true): Promise<string> {
     this.ensureDir(SCREENSHOT_DIR);
     const sanitised = name.replace(/[^a-zA-Z0-9_-]/g, '_');
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');

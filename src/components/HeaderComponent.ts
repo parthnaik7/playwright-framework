@@ -10,8 +10,7 @@
  *  - Follows the Composite pattern: page objects compose components.
  */
 
-import type { Page } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page, type Locator } from '@playwright/test';
 import { Logger } from '../utils/Logger';
 import { WaitUtils } from '../utils/WaitUtils';
 
@@ -21,23 +20,35 @@ export class HeaderComponent {
 
   // ─── Locators ─────────────────────────────────────────────────────────────
 
-  public readonly cartIcon = this.page.locator('.shopping_cart_link');
-  public readonly cartBadge = this.page.locator('.shopping_cart_badge');
-  public readonly burgerMenuButton = this.page.locator('#react-burger-menu-btn');
-  public readonly burgerMenuClose = this.page.locator('#react-burger-cross-btn');
-  public readonly appLogo = this.page.locator('.app_logo');
+  public readonly cartIcon: Locator;
+  public readonly cartBadge: Locator;
+  public readonly burgerMenuButton: Locator;
+  public readonly burgerMenuClose: Locator;
+  public readonly appLogo: Locator;
 
   // ─── Burger menu items ────────────────────────────────────────────────────
 
-  private readonly allItemsLink = this.page.locator('#inventory_sidebar_link');
-  private readonly aboutLink = this.page.locator('#about_sidebar_link');
-  private readonly logoutLink = this.page.locator('#logout_sidebar_link');
-  private readonly resetAppStateLink = this.page.locator('#reset_sidebar_link');
-  private readonly burgerMenuContainer = this.page.locator('.bm-menu-wrap');
+  private readonly allItemsLink: Locator;
+  private readonly aboutLink: Locator;
+  private readonly logoutLink: Locator;
+  private readonly resetAppStateLink: Locator;
+  private readonly burgerMenuContainer: Locator;
 
   public constructor(page: Page) {
     this.page = page;
     this.log = Logger.forContext('HeaderComponent');
+
+    this.cartIcon = this.page.locator('.shopping_cart_link');
+    this.cartBadge = this.page.locator('.shopping_cart_badge');
+    this.burgerMenuButton = this.page.locator('#react-burger-menu-btn');
+    this.burgerMenuClose = this.page.locator('#react-burger-cross-btn');
+    this.appLogo = this.page.locator('.app_logo');
+
+    this.allItemsLink = this.page.locator('#inventory_sidebar_link');
+    this.aboutLink = this.page.locator('#about_sidebar_link');
+    this.logoutLink = this.page.locator('#logout_sidebar_link');
+    this.resetAppStateLink = this.page.locator('#reset_sidebar_link');
+    this.burgerMenuContainer = this.page.locator('.bm-menu-wrap');
   }
 
   // ─── Actions ──────────────────────────────────────────────────────────────

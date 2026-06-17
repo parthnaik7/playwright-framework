@@ -52,10 +52,7 @@ export class Logger {
       transports: [
         // ── Console transport (colourised for local dev) ──
         new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.colorize({ all: true }),
-            customFormat,
-          ),
+          format: winston.format.combine(winston.format.colorize({ all: true }), customFormat),
         }),
         // ── File transport (JSON for structured log ingestion) ──
         new winston.transports.File({

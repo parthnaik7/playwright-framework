@@ -14,12 +14,7 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
-import type {
-  IEnvironmentConfig,
-  Environment,
-  BrowserType,
-  LogLevel,
-} from '../types/index';
+import type { IEnvironmentConfig, Environment, BrowserType, LogLevel } from '../types/index';
 
 export class EnvironmentManager {
   private static instance: EnvironmentManager | null = null;

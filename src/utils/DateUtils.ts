@@ -21,11 +21,7 @@ export class DateUtils {
    * e.g. "2024-06-15_14-32-07"
    */
   public static toFilenameSafeTimestamp(date: Date = new Date()): string {
-    return date
-      .toISOString()
-      .replace('T', '_')
-      .replace(/:/g, '-')
-      .split('.')[0] ?? '';
+    return date.toISOString().replace('T', '_').replace(/:/g, '-').split('.')[0] ?? '';
   }
 
   /**

@@ -16,7 +16,7 @@ import { Logger } from './src/utils/Logger';
 
 const log = Logger.forContext('GlobalTeardown');
 
-async function globalTeardown(): Promise<void> {
+function globalTeardown(): void {
   log.info('═══════════════════════════════════════════════════════');
   log.info('  🏁 PLAYWRIGHT FRAMEWORK — GLOBAL TEARDOWN');
   log.info('═══════════════════════════════════════════════════════');

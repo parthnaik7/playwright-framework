@@ -15,8 +15,7 @@
  *   test('my test', async ({ loginPage, inventoryPage }) => { ... });
  */
 
-import { test as base, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
@@ -63,7 +62,7 @@ const log = Logger.forContext('Fixtures');
 export const test = base.extend<PageFixtures>({
   // ── Credentials ─────────────────────────────────────────────────────────
 
-  standardCredentials: async ({}, use) => {
+  standardCredentials: async (_context, use) => {
     const { credentials } = envManager.getConfig();
     await use({
       username: credentials.standardUser,
@@ -71,7 +70,7 @@ export const test = base.extend<PageFixtures>({
     });
   },
 
-  lockedCredentials: async ({}, use) => {
+  lockedCredentials: async (_context, use) => {
     const { credentials } = envManager.getConfig();
     await use({
       username: credentials.lockedUser,

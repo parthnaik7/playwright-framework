@@ -24,7 +24,7 @@ export default defineConfig({
 
   // ── Execution ────────────────────────────────────────────────────────────
   fullyParallel: true,
-  forbidOnly: !!process.env['CI'],          // Fail CI if test.only is committed
+  forbidOnly: !!process.env['CI'], // Fail CI if test.only is committed
   retries: config.browser.retries,
   workers: process.env['CI'] ? 2 : config.browser.workers,
   timeout: config.timeouts.default,
@@ -44,7 +44,7 @@ export default defineConfig({
       'html',
       {
         outputFolder: 'playwright-report',
-        open: 'never',  // Don't auto-open in CI; run `npm run report:playwright` locally
+        open: 'never', // Don't auto-open in CI; run `npm run report:playwright` locally
       },
     ],
 

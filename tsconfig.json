@@ -54,7 +54,8 @@
     "tests/**/*.ts",
     "global-setup.ts",
     "global-teardown.ts",
-    "playwright.config.ts"
+    "playwright.config.ts",
+    "allure.config.ts"
   ],
   "exclude": ["node_modules", "dist", "allure-report", "playwright-report"]
 }

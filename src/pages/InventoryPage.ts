@@ -89,10 +89,7 @@ export class InventoryPage extends BasePage {
   /** Opens the product detail page by clicking on the product name link. */
   public async openProductDetail(productName: string): Promise<void> {
     this.log.step(`Opening product detail: "${productName}"`);
-    await this.page
-      .locator('.inventory_item_name')
-      .filter({ hasText: productName })
-      .click();
+    await this.page.locator('.inventory_item_name').filter({ hasText: productName }).click();
   }
 
   /** Sorts the inventory using the dropdown. */

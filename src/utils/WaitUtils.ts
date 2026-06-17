@@ -99,9 +99,7 @@ export class WaitUtils {
       await WaitUtils.sleep(interval);
     }
 
-    throw new Error(
-      `Condition never became true within ${timeout}ms: "${description}"`,
-    );
+    throw new Error(`Condition never became true within ${timeout}ms: "${description}"`);
   }
 
   /**

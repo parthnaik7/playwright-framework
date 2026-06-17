@@ -8,8 +8,7 @@
  *    multiple dialogs could be present (Liskov: any modal can use this contract).
  */
 
-import type { Page, Locator } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page, type Locator } from '@playwright/test';
 import { Logger } from '../utils/Logger';
 import { WaitUtils } from '../utils/WaitUtils';
 

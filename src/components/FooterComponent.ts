@@ -3,8 +3,7 @@
  * @description Reusable component for the SauceDemo site footer.
  */
 
-import type { Page } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page, type Locator } from '@playwright/test';
 import { Logger } from '../utils/Logger';
 
 export class FooterComponent {
@@ -13,15 +12,21 @@ export class FooterComponent {
 
   // ─── Locators ─────────────────────────────────────────────────────────────
 
-  private readonly footer = this.page.locator('.footer');
-  private readonly copyText = this.page.locator('.footer_copy');
-  private readonly twitterLink = this.page.locator('[data-test="social-twitter"]');
-  private readonly facebookLink = this.page.locator('[data-test="social-facebook"]');
-  private readonly linkedinLink = this.page.locator('[data-test="social-linkedin"]');
+  private readonly footer: Locator;
+  private readonly copyText: Locator;
+  private readonly twitterLink: Locator;
+  private readonly facebookLink: Locator;
+  private readonly linkedinLink: Locator;
 
   public constructor(page: Page) {
     this.page = page;
     this.log = Logger.forContext('FooterComponent');
+
+    this.footer = this.page.locator('.footer');
+    this.copyText = this.page.locator('.footer_copy');
+    this.twitterLink = this.page.locator('[data-test="social-twitter"]');
+    this.facebookLink = this.page.locator('[data-test="social-facebook"]');
+    this.linkedinLink = this.page.locator('[data-test="social-linkedin"]');
   }
 
   // ─── Read helpers ─────────────────────────────────────────────────────────

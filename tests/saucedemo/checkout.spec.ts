@@ -35,9 +35,7 @@ const PRODUCTS = {
 
 // ─── Helper: perform UI login and reach inventory ──────────────────────────────
 
-async function reachInventory(
-  page: Page,
-): Promise<InventoryPage> {
+async function reachInventory(page: Page): Promise<InventoryPage> {
   const inventoryPage = new InventoryPage(page);
   await inventoryPage.header.resetAppState();
   await inventoryPage.assertOnInventoryPage();
@@ -49,125 +47,122 @@ async function reachInventory(
 // ─────────────────────────────────────────────────────────────────────────────
 
 test.describe('SauceDemo — Checkout Flow', () => {
-  test(
-    'should complete a full checkout with a single product @smoke @regression',
-    async ({ authenticatedPage }) => {
-      const inventoryPage = await reachInventory(authenticatedPage);
-      const cartPage = new CartPage(authenticatedPage);
-      const checkoutPage = new CheckoutPage(authenticatedPage);
-      const address = TestDataGenerator.generateAddress();
+  test('should complete a full checkout with a single product @smoke @regression', async ({
+    authenticatedPage,
+  }) => {
+    const inventoryPage = await reachInventory(authenticatedPage);
+    const cartPage = new CartPage(authenticatedPage);
+    const checkoutPage = new CheckoutPage(authenticatedPage);
+    const address = TestDataGenerator.generateAddress();
 
-      // ── Step 1: Add product to cart ──────────────────────────────────────
-      log.step('Step 1: Add product to cart');
-      await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
-      await inventoryPage.assertCartBadgeCount(1);
+    // ── Step 1: Add product to cart ──────────────────────────────────────
+    log.step('Step 1: Add product to cart');
+    await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
+    await inventoryPage.assertCartBadgeCount(1);
 
-      // ── Step 2: Navigate to cart ─────────────────────────────────────────
-      log.step('Step 2: Navigate to cart');
-      await inventoryPage.header.goToCart();
-      await cartPage.assertOnCartPage();
-      await cartPage.assertItemInCart(PRODUCTS.BACKPACK);
-      await cartPage.assertCartItemCount(1);
-      await cartPage.assertCheckoutButtonVisible();
+    // ── Step 2: Navigate to cart ─────────────────────────────────────────
+    log.step('Step 2: Navigate to cart');
+    await inventoryPage.header.goToCart();
+    await cartPage.assertOnCartPage();
+    await cartPage.assertItemInCart(PRODUCTS.BACKPACK);
+    await cartPage.assertCartItemCount(1);
+    await cartPage.assertCheckoutButtonVisible();
 
-      // ── Step 3: Proceed to checkout info ─────────────────────────────────
-      log.step('Step 3: Proceed to checkout step 1');
-      await cartPage.proceedToCheckout();
-      await checkoutPage.assertOnStepOne();
+    // ── Step 3: Proceed to checkout info ─────────────────────────────────
+    log.step('Step 3: Proceed to checkout step 1');
+    await cartPage.proceedToCheckout();
+    await checkoutPage.assertOnStepOne();
 
-      // ── Step 4: Fill customer information ────────────────────────────────
-      log.step('Step 4: Fill customer information');
-      log.debug('Using generated address', { address });
-      await checkoutPage.completeCustomerInfo(address);
+    // ── Step 4: Fill customer information ────────────────────────────────
+    log.step('Step 4: Fill customer information');
+    log.debug('Using generated address', { address });
+    await checkoutPage.completeCustomerInfo(address);
 
-      // ── Step 5: Verify order overview ────────────────────────────────────
-      log.step('Step 5: Verify order overview');
-      await checkoutPage.assertOnStepTwo();
-      await checkoutPage.assertSummaryItemCount(1);
-      await checkoutPage.assertTotalsAreCorrect();
+    // ── Step 5: Verify order overview ────────────────────────────────────
+    log.step('Step 5: Verify order overview');
+    await checkoutPage.assertOnStepTwo();
+    await checkoutPage.assertSummaryItemCount(1);
+    await checkoutPage.assertTotalsAreCorrect();
 
-      const orderTotal = await checkoutPage.getOrderTotal();
-      expect(orderTotal, 'Order total should be positive').toBeGreaterThan(0);
-      log.info(`Order total: $${orderTotal}`);
+    const orderTotal = await checkoutPage.getOrderTotal();
+    expect(orderTotal, 'Order total should be positive').toBeGreaterThan(0);
+    log.info(`Order total: $${orderTotal}`);
 
-      // ── Step 6: Finish the order ─────────────────────────────────────────
-      log.step('Step 6: Finish the order');
-      await checkoutPage.finishOrder();
+    // ── Step 6: Finish the order ─────────────────────────────────────────
+    log.step('Step 6: Finish the order');
+    await checkoutPage.finishOrder();
 
-      // ── Step 7: Verify confirmation ──────────────────────────────────────
-      log.step('Step 7: Verify order confirmation');
-      await checkoutPage.assertOrderComplete();
-      log.info('✅ Full checkout flow completed successfully');
-    },
-  );
+    // ── Step 7: Verify confirmation ──────────────────────────────────────
+    log.step('Step 7: Verify order confirmation');
+    await checkoutPage.assertOrderComplete();
+    log.info('✅ Full checkout flow completed successfully');
+  });
 
-  test(
-    'should complete checkout with multiple products and verify totals @regression',
-    async ({ authenticatedPage }) => {
-      const inventoryPage = await reachInventory(authenticatedPage);
-      const cartPage = new CartPage(authenticatedPage);
-      const checkoutPage = new CheckoutPage(authenticatedPage);
-      const address = TestDataGenerator.generateAddress();
-      const products = [PRODUCTS.BACKPACK, PRODUCTS.BIKE_LIGHT, PRODUCTS.BOLT_SHIRT];
+  test('should complete checkout with multiple products and verify totals @regression', async ({
+    authenticatedPage,
+  }) => {
+    const inventoryPage = await reachInventory(authenticatedPage);
+    const cartPage = new CartPage(authenticatedPage);
+    const checkoutPage = new CheckoutPage(authenticatedPage);
+    const address = TestDataGenerator.generateAddress();
+    const products = [PRODUCTS.BACKPACK, PRODUCTS.BIKE_LIGHT, PRODUCTS.BOLT_SHIRT];
 
-      // Add all products
-      log.step(`Adding ${products.length} products to cart`);
-      await inventoryPage.addProductsToCart(products);
-      await inventoryPage.assertCartBadgeCount(products.length);
+    // Add all products
+    log.step(`Adding ${products.length} products to cart`);
+    await inventoryPage.addProductsToCart(products);
+    await inventoryPage.assertCartBadgeCount(products.length);
 
-      // Navigate through checkout
-      await inventoryPage.header.goToCart();
-      await cartPage.assertCartItemCount(products.length);
+    // Navigate through checkout
+    await inventoryPage.header.goToCart();
+    await cartPage.assertCartItemCount(products.length);
 
-      await cartPage.proceedToCheckout();
-      await checkoutPage.assertOnStepOne();
-      await checkoutPage.completeCustomerInfo(address);
+    await cartPage.proceedToCheckout();
+    await checkoutPage.assertOnStepOne();
+    await checkoutPage.completeCustomerInfo(address);
 
-      // Verify overview shows all items
-      await checkoutPage.assertOnStepTwo();
-      await checkoutPage.assertSummaryItemCount(products.length);
+    // Verify overview shows all items
+    await checkoutPage.assertOnStepTwo();
+    await checkoutPage.assertSummaryItemCount(products.length);
 
-      // Verify totals are mathematically correct
-      await checkoutPage.assertTotalsAreCorrect();
+    // Verify totals are mathematically correct
+    await checkoutPage.assertTotalsAreCorrect();
 
-      const itemTotal = await checkoutPage.getItemTotal();
-      const tax = await checkoutPage.getTaxAmount();
-      const orderTotal = await checkoutPage.getOrderTotal();
+    const itemTotal = await checkoutPage.getItemTotal();
+    const tax = await checkoutPage.getTaxAmount();
+    const orderTotal = await checkoutPage.getOrderTotal();
 
-      log.info(`Item total: $${itemTotal} | Tax: $${tax} | Order total: $${orderTotal}`);
-      expect(orderTotal).toBeCloseTo(itemTotal + tax, 1);
+    log.info(`Item total: $${itemTotal} | Tax: $${tax} | Order total: $${orderTotal}`);
+    expect(orderTotal).toBeCloseTo(itemTotal + tax, 1);
 
-      await checkoutPage.finishOrder();
-      await checkoutPage.assertOrderComplete();
-      log.info('✅ Multi-product checkout completed with verified totals');
-    },
-  );
+    await checkoutPage.finishOrder();
+    await checkoutPage.assertOrderComplete();
+    log.info('✅ Multi-product checkout completed with verified totals');
+  });
 
-  test(
-    'should navigate back to products page after completing order @regression',
-    async ({ authenticatedPage }) => {
-      const inventoryPage = await reachInventory(authenticatedPage);
-      const cartPage = new CartPage(authenticatedPage);
-      const checkoutPage = new CheckoutPage(authenticatedPage);
-      const address = TestDataGenerator.generateAddress();
+  test('should navigate back to products page after completing order @regression', async ({
+    authenticatedPage,
+  }) => {
+    const inventoryPage = await reachInventory(authenticatedPage);
+    const cartPage = new CartPage(authenticatedPage);
+    const checkoutPage = new CheckoutPage(authenticatedPage);
+    const address = TestDataGenerator.generateAddress();
 
-      await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
-      await inventoryPage.header.goToCart();
-      await cartPage.proceedToCheckout();
-      await checkoutPage.completeCustomerInfo(address);
-      await checkoutPage.finishOrder();
-      await checkoutPage.assertOrderComplete();
+    await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
+    await inventoryPage.header.goToCart();
+    await cartPage.proceedToCheckout();
+    await checkoutPage.completeCustomerInfo(address);
+    await checkoutPage.finishOrder();
+    await checkoutPage.assertOrderComplete();
 
-      // Click "Back Home"
-      log.step('Navigating back to products from confirmation');
-      await checkoutPage.backToProducts();
+    // Click "Back Home"
+    log.step('Navigating back to products from confirmation');
+    await checkoutPage.backToProducts();
 
-      await inventoryPage.assertOnInventoryPage();
-      // Cart should be empty after order is complete
-      await inventoryPage.assertCartBadgeCount(0);
-      log.info('✅ Returned to inventory with cleared cart after order');
-    },
-  );
+    await inventoryPage.assertOnInventoryPage();
+    // Cart should be empty after order is complete
+    await inventoryPage.assertCartBadgeCount(0);
+    log.info('✅ Returned to inventory with cleared cart after order');
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -190,69 +185,57 @@ test.describe('SauceDemo — Checkout Validation', () => {
     await checkoutPage.assertOnStepOne();
   });
 
-  test(
-    'should show error when First Name is missing @regression',
-    async () => {
-      log.step('Submitting checkout without first name');
-      const address = TestDataGenerator.generateAddress();
-      // Fill last name and postal code but NOT first name
-      await checkoutPage.fillCustomerInfo({
-        firstName: '',
-        lastName: address.lastName,
-        postalCode: address.postalCode,
-      });
-      await checkoutPage.continueToOverview();
+  test('should show error when First Name is missing @regression', async () => {
+    log.step('Submitting checkout without first name');
+    const address = TestDataGenerator.generateAddress();
+    // Fill last name and postal code but NOT first name
+    await checkoutPage.fillCustomerInfo({
+      firstName: '',
+      lastName: address.lastName,
+      postalCode: address.postalCode,
+    });
+    await checkoutPage.continueToOverview();
 
-      await checkoutPage.assertErrorVisible('First Name is required');
-      // Should remain on step 1
-      await checkoutPage.assertOnStepOne();
-    },
-  );
+    await checkoutPage.assertErrorVisible('First Name is required');
+    // Should remain on step 1
+    await checkoutPage.assertOnStepOne();
+  });
 
-  test(
-    'should show error when Last Name is missing @regression',
-    async () => {
-      log.step('Submitting checkout without last name');
-      const address = TestDataGenerator.generateAddress();
-      await checkoutPage.fillCustomerInfo({
-        firstName: address.firstName,
-        lastName: '',
-        postalCode: address.postalCode,
-      });
-      await checkoutPage.continueToOverview();
+  test('should show error when Last Name is missing @regression', async () => {
+    log.step('Submitting checkout without last name');
+    const address = TestDataGenerator.generateAddress();
+    await checkoutPage.fillCustomerInfo({
+      firstName: address.firstName,
+      lastName: '',
+      postalCode: address.postalCode,
+    });
+    await checkoutPage.continueToOverview();
 
-      await checkoutPage.assertErrorVisible('Last Name is required');
-      await checkoutPage.assertOnStepOne();
-    },
-  );
+    await checkoutPage.assertErrorVisible('Last Name is required');
+    await checkoutPage.assertOnStepOne();
+  });
 
-  test(
-    'should show error when Postal Code is missing @regression',
-    async () => {
-      log.step('Submitting checkout without postal code');
-      const address = TestDataGenerator.generateAddress();
-      await checkoutPage.fillCustomerInfo({
-        firstName: address.firstName,
-        lastName: address.lastName,
-        postalCode: '',
-      });
-      await checkoutPage.continueToOverview();
+  test('should show error when Postal Code is missing @regression', async () => {
+    log.step('Submitting checkout without postal code');
+    const address = TestDataGenerator.generateAddress();
+    await checkoutPage.fillCustomerInfo({
+      firstName: address.firstName,
+      lastName: address.lastName,
+      postalCode: '',
+    });
+    await checkoutPage.continueToOverview();
 
-      await checkoutPage.assertErrorVisible('Postal Code is required');
-      await checkoutPage.assertOnStepOne();
-    },
-  );
+    await checkoutPage.assertErrorVisible('Postal Code is required');
+    await checkoutPage.assertOnStepOne();
+  });
 
-  test(
-    'should show error when all fields are empty @regression',
-    async () => {
-      log.step('Submitting empty checkout form');
-      await checkoutPage.fillCustomerInfo({ firstName: '', lastName: '', postalCode: '' });
-      await checkoutPage.continueToOverview();
-      await checkoutPage.assertErrorVisible('First Name is required');
-      await checkoutPage.assertOnStepOne();
-    },
-  );
+  test('should show error when all fields are empty @regression', async () => {
+    log.step('Submitting empty checkout form');
+    await checkoutPage.fillCustomerInfo({ firstName: '', lastName: '', postalCode: '' });
+    await checkoutPage.continueToOverview();
+    await checkoutPage.assertErrorVisible('First Name is required');
+    await checkoutPage.assertOnStepOne();
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -260,52 +243,50 @@ test.describe('SauceDemo — Checkout Validation', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 test.describe('SauceDemo — Checkout Cancellation', () => {
-  test(
-    'should cancel from step 1 and return to cart @regression',
-    async ({ authenticatedPage }) => {
-      const inventoryPage = await reachInventory(authenticatedPage);
-      const cartPage = new CartPage(authenticatedPage);
-      const checkoutPage = new CheckoutPage(authenticatedPage);
+  test('should cancel from step 1 and return to cart @regression', async ({
+    authenticatedPage,
+  }) => {
+    const inventoryPage = await reachInventory(authenticatedPage);
+    const cartPage = new CartPage(authenticatedPage);
+    const checkoutPage = new CheckoutPage(authenticatedPage);
 
-      await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
-      await inventoryPage.header.goToCart();
-      await cartPage.proceedToCheckout();
-      await checkoutPage.assertOnStepOne();
+    await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
+    await inventoryPage.header.goToCart();
+    await cartPage.proceedToCheckout();
+    await checkoutPage.assertOnStepOne();
 
-      log.step('Cancelling from checkout step 1');
-      await checkoutPage.cancel();
+    log.step('Cancelling from checkout step 1');
+    await checkoutPage.cancel();
 
-      // Should return to cart with item still present
-      await cartPage.assertOnCartPage();
-      await cartPage.assertItemInCart(PRODUCTS.BACKPACK);
-      log.info('✅ Cancel from step 1 returned to cart with items intact');
-    },
-  );
+    // Should return to cart with item still present
+    await cartPage.assertOnCartPage();
+    await cartPage.assertItemInCart(PRODUCTS.BACKPACK);
+    log.info('✅ Cancel from step 1 returned to cart with items intact');
+  });
 
-  test(
-    'should cancel from step 2 (overview) and return to inventory @regression',
-    async ({ authenticatedPage }) => {
-      const inventoryPage = await reachInventory(authenticatedPage);
-      const cartPage = new CartPage(authenticatedPage);
-      const checkoutPage = new CheckoutPage(authenticatedPage);
-      const address = TestDataGenerator.generateAddress();
+  test('should cancel from step 2 (overview) and return to inventory @regression', async ({
+    authenticatedPage,
+  }) => {
+    const inventoryPage = await reachInventory(authenticatedPage);
+    const cartPage = new CartPage(authenticatedPage);
+    const checkoutPage = new CheckoutPage(authenticatedPage);
+    const address = TestDataGenerator.generateAddress();
 
-      await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
-      await inventoryPage.header.goToCart();
-      await cartPage.proceedToCheckout();
-      await checkoutPage.completeCustomerInfo(address);
-      await checkoutPage.assertOnStepTwo();
+    await inventoryPage.addProductToCart(PRODUCTS.BACKPACK);
+    await inventoryPage.header.goToCart();
+    await cartPage.proceedToCheckout();
+    await checkoutPage.completeCustomerInfo(address);
+    await checkoutPage.assertOnStepTwo();
 
-      log.step('Cancelling from checkout step 2');
-      await checkoutPage.cancelFromOverview();
+    log.step('Cancelling from checkout step 2');
+    await checkoutPage.cancelFromOverview();
 
-      // SauceDemo cancel from step 2 goes to inventory
-      await inventoryPage.assertOnInventoryPage();
-      // Cart badge should still show 1
-      await inventoryPage.assertCartBadgeCount(1);
-      log.info('✅ Cancel from step 2 returned to inventory with cart preserved');
-    },
-  );
+    // SauceDemo cancel from step 2 goes to inventory
+    await inventoryPage.assertOnInventoryPage();
+    // Cart badge should still show 1
+    await inventoryPage.assertCartBadgeCount(1);
+    log.info('✅ Cancel from step 2 returned to inventory with cart preserved');
+  });
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -315,24 +296,23 @@ test.describe('SauceDemo — Checkout Cancellation', () => {
 const checkoutAddresses = TestDataGenerator.generateAddresses(3);
 
 for (const [index, address] of checkoutAddresses.entries()) {
-  test(
-    `should complete checkout with generated address #${index + 1} @regression`,
-    async ({ authenticatedPage }) => {
-      const inventoryPage = await reachInventory(authenticatedPage);
-      const cartPage = new CartPage(authenticatedPage);
-      const checkoutPage = new CheckoutPage(authenticatedPage);
+  test(`should complete checkout with generated address #${index + 1} @regression`, async ({
+    authenticatedPage,
+  }) => {
+    const inventoryPage = await reachInventory(authenticatedPage);
+    const cartPage = new CartPage(authenticatedPage);
+    const checkoutPage = new CheckoutPage(authenticatedPage);
 
-      log.debug(`Running checkout with address #${index + 1}`, { address });
+    log.debug(`Running checkout with address #${index + 1}`, { address });
 
-      await inventoryPage.addProductToCart(PRODUCTS.BIKE_LIGHT);
-      await inventoryPage.header.goToCart();
-      await cartPage.proceedToCheckout();
-      await checkoutPage.completeCustomerInfo(address);
-      await checkoutPage.assertOnStepTwo();
-      await checkoutPage.finishOrder();
-      await checkoutPage.assertOrderComplete();
+    await inventoryPage.addProductToCart(PRODUCTS.BIKE_LIGHT);
+    await inventoryPage.header.goToCart();
+    await cartPage.proceedToCheckout();
+    await checkoutPage.completeCustomerInfo(address);
+    await checkoutPage.assertOnStepTwo();
+    await checkoutPage.finishOrder();
+    await checkoutPage.assertOrderComplete();
 
-      log.info(`✅ Checkout #${index + 1} completed for ${address.firstName} ${address.lastName}`);
-    },
-  );
+    log.info(`✅ Checkout #${index + 1} completed for ${address.firstName} ${address.lastName}`);
+  });
 }

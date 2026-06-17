@@ -63,11 +63,11 @@ playwright-framework/
 
 ### 1. Prerequisites
 
-| Tool | Minimum Version |
-|------|----------------|
-| Node.js | 18.x |
-| npm | 9.x |
-| Git | 2.x |
+| Tool    | Minimum Version |
+| ------- | --------------- |
+| Node.js | 18.x            |
+| npm     | 9.x             |
+| Git     | 2.x             |
 
 ### 2. Clone & Install
 
@@ -157,6 +157,7 @@ npm run report:allure:serve
 ```
 
 **Allure includes:**
+
 - Test timeline with pass/fail/skip breakdown
 - Step-by-step execution traces
 - Screenshots embedded inline for failures
@@ -170,21 +171,23 @@ npm run report:allure:serve
 
 ### SOLID in Practice
 
-| Principle | Implementation |
-|-----------|---------------|
-| **S**ingle Responsibility | Each class has one job: `LoginPage` handles login UI; `Logger` handles logging; `EnvironmentManager` handles config loading |
-| **O**pen/Closed | `BasePage` is open for extension (any page extends it) but closed for modification — new pages add behaviour without touching the base |
-| **L**iskov Substitution | Any `BasePage` subclass can be used where `BasePage` is expected — they all honour the `isLoaded()` + `navigate()` contract |
-| **I**nterface Segregation | `IUserCredentials`, `IAddress`, `IProduct` are narrow interfaces; pages only depend on what they need |
-| **D**ependency Inversion | `ApiClient` receives `APIRequestContext` from Playwright (injected via fixtures), not created internally |
+| Principle                 | Implementation                                                                                                                         |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **S**ingle Responsibility | Each class has one job: `LoginPage` handles login UI; `Logger` handles logging; `EnvironmentManager` handles config loading            |
+| **O**pen/Closed           | `BasePage` is open for extension (any page extends it) but closed for modification — new pages add behaviour without touching the base |
+| **L**iskov Substitution   | Any `BasePage` subclass can be used where `BasePage` is expected — they all honour the `isLoaded()` + `navigate()` contract            |
+| **I**nterface Segregation | `IUserCredentials`, `IAddress`, `IProduct` are narrow interfaces; pages only depend on what they need                                  |
+| **D**ependency Inversion  | `ApiClient` receives `APIRequestContext` from Playwright (injected via fixtures), not created internally                               |
 
 ### DRY in Practice
+
 - `BasePage` centralises all Playwright interactions (click, fill, getText, assertions)
 - `HeaderComponent` is shared by `InventoryPage` and `CartPage` — no duplicated locators
 - `TestDataGenerator` provides all fake data — no inline `faker.X.Y()` calls in tests
 - Credentials come from `EnvironmentManager` — one source of truth
 
 ### KISS in Practice
+
 - `WaitUtils.waitForCondition()` is a dead-simple polling loop — no complex state machines
 - Tests read as plain English: `loginPage.login(creds)` → `inventoryPage.assertOnInventoryPage()`
 - `EnvironmentManager` exposes a single `getConfig()` object — no magic strings anywhere
@@ -242,8 +245,8 @@ npm run test:dev           # → loads .env.dev
 ```typescript
 // Each class gets a tagged logger
 const log = Logger.forContext('CheckoutPage');
-log.step('Filling customer info');     // → [CheckoutPage] ▶ STEP: Filling customer info
-log.error('Payment failed', error);   // → [CheckoutPage] ERROR Payment failed
+log.step('Filling customer info'); // → [CheckoutPage] ▶ STEP: Filling customer info
+log.error('Payment failed', error); // → [CheckoutPage] ERROR Payment failed
 ```
 
 ---
@@ -349,17 +352,17 @@ APP_ENV=staging npm test
 
 ## 📦 Dependencies Overview
 
-| Package | Purpose |
-|---------|---------|
-| `@playwright/test` | Core browser automation + test runner |
-| `allure-playwright` | Allure reporter integration |
-| `winston` | Structured logging (Console + File transports) |
-| `@faker-js/faker` | Realistic test data generation |
-| `dotenv` | Environment variable loading |
-| `uuid` | Unique ID generation for test data |
-| `cross-env` | Cross-platform `APP_ENV=qa npm test` |
-| `typescript` | Type safety across the entire framework |
-| `eslint` + `prettier` | Code quality enforcement |
+| Package               | Purpose                                        |
+| --------------------- | ---------------------------------------------- |
+| `@playwright/test`    | Core browser automation + test runner          |
+| `allure-playwright`   | Allure reporter integration                    |
+| `winston`             | Structured logging (Console + File transports) |
+| `@faker-js/faker`     | Realistic test data generation                 |
+| `dotenv`              | Environment variable loading                   |
+| `uuid`                | Unique ID generation for test data             |
+| `cross-env`           | Cross-platform `APP_ENV=qa npm test`           |
+| `typescript`          | Type safety across the entire framework        |
+| `eslint` + `prettier` | Code quality enforcement                       |
 
 ---
 
