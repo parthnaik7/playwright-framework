@@ -62,6 +62,7 @@ const log = Logger.forContext('Fixtures');
 export const test = base.extend<PageFixtures>({
   // ── Credentials ─────────────────────────────────────────────────────────
 
+  // eslint-disable-next-line no-empty-pattern
   standardCredentials: async ({}, use) => {
     const { credentials } = envManager.getConfig();
     await use({
@@ -70,6 +71,7 @@ export const test = base.extend<PageFixtures>({
     });
   },
 
+  // eslint-disable-next-line no-empty-pattern
   lockedCredentials: async ({}, use) => {
     const { credentials } = envManager.getConfig();
     await use({
