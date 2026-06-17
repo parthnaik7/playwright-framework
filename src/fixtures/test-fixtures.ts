@@ -62,7 +62,7 @@ const log = Logger.forContext('Fixtures');
 export const test = base.extend<PageFixtures>({
   // ── Credentials ─────────────────────────────────────────────────────────
 
-  standardCredentials: async (_context, use) => {
+  standardCredentials: async ({}, use) => {
     const { credentials } = envManager.getConfig();
     await use({
       username: credentials.standardUser,
@@ -70,7 +70,7 @@ export const test = base.extend<PageFixtures>({
     });
   },
 
-  lockedCredentials: async (_context, use) => {
+  lockedCredentials: async ({}, use) => {
     const { credentials } = envManager.getConfig();
     await use({
       username: credentials.lockedUser,
