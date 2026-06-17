@@ -34,7 +34,8 @@ export class TestDataGenerator {
     const lastName = faker.person.lastName();
 
     return {
-      username: faker.internet.username({ firstName, lastName }).toLowerCase(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      username: String(faker.internet.username({ firstName, lastName })).toLowerCase(),
       password: faker.internet.password({ length: 12, memorable: true }),
       firstName,
       lastName,

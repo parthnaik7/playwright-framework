@@ -3,8 +3,7 @@
  * @description Page Object for the SauceDemo product inventory screen.
  */
 
-import type { Page, Locator } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page, type Locator } from '@playwright/test';
 import { BasePage } from './base/BasePage';
 import { HeaderComponent } from '../components/HeaderComponent';
 import type { SortOption } from '../types/index';

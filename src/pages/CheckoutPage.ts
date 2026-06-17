@@ -12,8 +12,7 @@
  * name so Allure can group them under a "Checkout" feature story.
  */
 
-import type { Page } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import { BasePage } from './base/BasePage';
 import type { IAddress } from '../types/index';
 

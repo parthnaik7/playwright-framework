@@ -3,8 +3,7 @@
  * @description Page Object for the SauceDemo shopping cart screen.
  */
 
-import type { Page } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import { BasePage } from './base/BasePage';
 import { HeaderComponent } from '../components/HeaderComponent';
 

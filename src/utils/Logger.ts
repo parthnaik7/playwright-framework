@@ -98,7 +98,7 @@ export class Logger {
     this.winstonLogger.warn(message, { context: this.context, ...meta });
   }
 
-  public error(message: string, error?: Error | unknown, meta?: Record<string, unknown>): void {
+  public error(message: string, error?: unknown, meta?: Record<string, unknown>): void {
     if (error instanceof Error) {
       this.winstonLogger.error(message, {
         context: this.context,

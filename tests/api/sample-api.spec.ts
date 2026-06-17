@@ -54,7 +54,7 @@ const JSON_PLACEHOLDER = 'https://jsonplaceholder.typicode.com';
 test.describe('API — GET Requests @api', () => {
   let client: ApiClient;
 
-  test.beforeEach(async ({ request }) => {
+  test.beforeEach(({ request }) => {
     // Build a dedicated client pointing at the public API
     client = new ApiClient(request, JSON_PLACEHOLDER);
   });
@@ -150,7 +150,7 @@ test.describe('API — GET Requests @api', () => {
 test.describe('API — POST Requests @api', () => {
   let client: ApiClient;
 
-  test.beforeEach(async ({ request }) => {
+  test.beforeEach(({ request }) => {
     client = new ApiClient(request, JSON_PLACEHOLDER);
   });
 
@@ -183,7 +183,7 @@ test.describe('API — POST Requests @api', () => {
 test.describe('API — PUT Requests @api', () => {
   let client: ApiClient;
 
-  test.beforeEach(async ({ request }) => {
+  test.beforeEach(({ request }) => {
     client = new ApiClient(request, JSON_PLACEHOLDER);
   });
 
@@ -212,7 +212,7 @@ test.describe('API — PUT Requests @api', () => {
 test.describe('API — PATCH Requests @api', () => {
   let client: ApiClient;
 
-  test.beforeEach(async ({ request }) => {
+  test.beforeEach(({ request }) => {
     client = new ApiClient(request, JSON_PLACEHOLDER);
   });
 
@@ -236,7 +236,7 @@ test.describe('API — PATCH Requests @api', () => {
 test.describe('API — DELETE Requests @api', () => {
   let client: ApiClient;
 
-  test.beforeEach(async ({ request }) => {
+  test.beforeEach(({ request }) => {
     client = new ApiClient(request, JSON_PLACEHOLDER);
   });
 
@@ -258,7 +258,7 @@ test.describe('API — DELETE Requests @api', () => {
 test.describe('API — Users @api', () => {
   let client: ApiClient;
 
-  test.beforeEach(async ({ request }) => {
+  test.beforeEach(({ request }) => {
     client = new ApiClient(request, JSON_PLACEHOLDER);
   });
 

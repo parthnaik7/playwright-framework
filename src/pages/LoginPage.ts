@@ -9,8 +9,7 @@
  *    API surface exposed to tests — implementation details stay private.
  */
 
-import type { Page } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import { BasePage } from './base/BasePage';
 import type { IUserCredentials } from '../types/index';
 

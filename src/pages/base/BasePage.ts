@@ -12,8 +12,7 @@
  *    no page class calls `waitForLoadState` directly.
  */
 
-import type { Page, Locator, BrowserContext } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, type Page, type Locator, type BrowserContext } from '@playwright/test';
 import { Logger } from '../../utils/Logger';
 import { WaitUtils } from '../../utils/WaitUtils';
 import { ScreenshotUtils } from '../../utils/ScreenshotUtils';
